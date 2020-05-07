@@ -1,0 +1,27 @@
+#compdef store
+#autoload
+
+# store (keychain) command zsh completions
+# Docs - http://zsh.sourceforge.net/Doc/Release/Completion-System.html#Completion-Functions
+# source $ZSH/oh-my-zsh.sh
+# Make sure these changes are in ~/.zshrc file
+# fpath=($(pwd) $fpath)
+# autoload -U compinit && compinit
+
+_store() {
+  local -a commands
+
+  commands=(
+    'add:Add new key, token or password' 
+    'delete:Delete password'
+    'find:Find and return a passoword'
+  )
+
+  if (( CURRENT == 2 )); then
+    _describe -t commands 'commands' commands
+  fi
+
+  return 0
+}
+
+_store

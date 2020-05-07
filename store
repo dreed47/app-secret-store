@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# make sure this file is your PATH
+
+# If using zsh copy completions file 
+ZSH_COMPLETIONS_DIR=~/.my-zsh-completions
+if [ -d "$ZSH_COMPLETIONS_DIR" ]; then
+  cp ./_store $ZSH_COMPLETIONS_DIR
+fi
+
+kind="custom app secrets"
+
+if [ "$#" -lt 1 ] || [ "$#" -gt 3 ]; then
+  echo "Expected 1 or 2 arguments, the name of the function to perform and any argument to pass to it ..."
+  echo "usage:"
+  echo ""
+  echo "store add"
+  echo "store delete"
+  echo "store find"
+  echo ""
+
+  exit 1
+fi
+
+add() {
+  echo ""
+  if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "...command requires 2 parameters, the password name and the actual password (or GEN to generate one) "
+  elif [ $2 = "GEN" ]; then
+    pass=$(pwgen)
+    echo "security add-generic-password -a ${USER} -s $1 -w $pass -U -D $kind"
+    security add-generic-password -a ${USER} -s $1 -w $pass -U -D "$kind"  
+  else
+    echo "security add-generic-password -a ${USER} -s $1 -w $2 -U -D $kind"
+    security add-generic-password -a ${USER} -s $1 -w $2 -U -D "$kind"
+  fi
+  echo ""
+}
+
+delete() {
+  echo ""
+  if [ -z "$1" ]; then
+    echo "...command requires 1 parameter, the password name "
+  else
+    echo "security delete-generic-password -a ${USER} -s $1"
+    security delete-generic-password -a ${USER} -s $1 
+  fi
+  echo ""
+}
+
+find() {
+  echo ""
+  if [ -z "$1" ]; then
+    echo "...command requires 1 parameter, the password name "
+  else
+    echo "security find-generic-password -a ${USER} -s $1 -w"
+    security find-generic-password -a ${USER} -s $1 -w
+  fi
+  echo ""
+}
+
+# call function 
+"$@"
+
+exit 0
+
