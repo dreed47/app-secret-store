@@ -13,6 +13,6 @@ by running just ```keystore``` with no parameters.
 
 * For [Z shell](https://en.wikipedia.org/wiki/Z_shell) users there is an autocompletions file included.  Make sure to copy the _keystore file to your $ZSH_COMPLETIONS_DIR directory.
 
-![keystore screenshot](/app-secret-store/images/shreenshot1.png "keystore screenshot")
+![keystore screenshot](images/shreenshot1.png "keystore screenshot")
 
 __*note: On MacOS if you see odd screen artifacts you may need to update the ncurses package. e.g. using brew: ```brew install ncurses```*__
