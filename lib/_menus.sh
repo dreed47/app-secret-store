@@ -34,8 +34,8 @@ while [[ selected_option != 0 ]]; do
   # position and print menu separator then reset cursor to top 
   tput cup $menu_bottom_row 0
   printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-  echo "   Existing passwords"
-  echo "   -------------------"
+  echo "   Existing passwords found in the current folder"
+  echo "   ----------------------------------------------"
   for i in "${secrets[@]}"; do
     echo "   $i"
   done  
