@@ -6,8 +6,8 @@
 
 key_names=()
 
-menu_items=("1. Add new password item" "2. Change password" "3. Show password" "4. Delete password" "0. Quit")
-pass_gen_menu_items=("Enter my own password" "Generate a random password")
+menu_items=("1. Add new secret item" "2. Change selected secret item" "3. Show selected items secret value" "4. Delete selected secret item" "0. Quit")
+pass_gen_menu_items=("Enter my own secret/password value" "Generate a random secret/password value")
 
 # load secret password variable names from local .keystore file
 load_from_file
@@ -45,21 +45,24 @@ while true; do
     0)  tput cup $body_top_row 0
         clear_body
         echo ""
-        read -p "Enter the name of the new password: " 
+        echo "Secret item names are not namespaced to this project in the key store so either use  "
+        echo "unique names for this project or ensure you dont accidentally change an existing item)): "
+        echo
+        read -p "Enter the name of the new secret item: " 
         pass_name=${REPLY}
-        status_msg "Creating password: $pass_name"
+        status_msg "Creating secret item: $pass_name"
         echo ""
         select_option  "${pass_gen_menu_items[@]}"
         choice=$?
         if [ "$choice" -eq 1 ]; then
-          read -p "Enter password length [32]: " pass_length
+          read -p "Enter secret/password length or accept the default [32]: " pass_length
           pass_length=${pass_length:-32}
           pass="$(gen_password -n $pass_length)"
         else
-          read -p "Enter the password or key value: " 
+          read -p "Enter the secret/password or key value: " 
           pass=${REPLY}
         fi
-        status_msg "Your password: ${pass}"
+        status_msg "Entered secret value: ${pass}"
         # add item to db
         add "${pass_name}" "${pass}"
         # append to file
@@ -68,40 +71,40 @@ while true; do
         ;;
     1)  tput cup $body_top_row 0
         clear_body
-        echo "Select the password item to change:"
+        echo "Select the secret item to change:"
         echo  
         select_option "${key_names[@]}"
         choice=$?
         select_option  "${pass_gen_menu_items[@]}"
         sub_menu_choice=$?
         if [ "$sub_menu_choice" -eq 1 ]; then
-          read -p "Enter password length [32]: " pass_length
+          read -p "Enter secret/password length or accept the default [32]: " pass_length
           pass_length=${pass_length:-32}
           pass="$(gen_password -n $pass_length)"
         else
-          read -p "Enter the password or key value: " 
+          read -p "Enter the secret/password or key value: " 
           pass=${REPLY}
         fi
-        status_msg "You change password ${pass}"
+        status_msg "You change secret item: ${pass}"
         change "${key_names[$choice]}" "$pass"
         ;;
     2)  tput cup $body_top_row 0
         clear_body
-        echo "Select the password item to show:"
+        echo "Select the secret item to show:"
         echo  
         select_option "${key_names[@]}"
         choice=$?
         get "${key_names[$choice]}"
-        status_msg "Show password ${key_names[$choice]}"
+        status_msg "Show secret: ${key_names[$choice]}"
         ;;
     3)  tput cup $body_top_row 0
         clear_body
-        echo "Select the password item to delete:"
+        echo "Select the secret item to delete:"
         echo  
         select_option "${key_names[@]}"
         choice=$?
         delete "${key_names[$choice]}"
-        status_msg "Deleted password ${key_names[$choice]}"
+        status_msg "Deleted secret item: ${key_names[$choice]}"
         unset 'key_names[$choice]'
         save_keys_to_file
         load_from_file
