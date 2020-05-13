@@ -2,61 +2,52 @@
 # 
 # 
 
-source ${script_path//\/keystore/\/lib\/_cursor_menus.sh}
+#source ${script_path//\/keystore/\/lib\/_cursor_menus.sh}
 
-# Check for keystore.txt file in current directory, if not there create it 
-KEYSTORE_FILE=./.keystore
 key_names=()
-touch $KEYSTORE_FILE
+
 menu_items=("1. Add new password item" "2. Change password" "3. Show password" "4. Delete password" "0. Quit")
 pass_gen_menu_items=("Enter my own password" "Generate a random password")
-item=0
 
+# load secret password variable names from local .keystore file
 load_from_file
 
-# Save screen
-tput smcup
-
-status_line_height=2
+status_msg_line_height=2
+last_status_line1_message=""
+last_status_line2_message=""
 lines=$(tput lines)
 menu_bottom_row=$((${#menu_items[@]} + 2))
 body_top_row=$((${#menu_items[@]} + 3))
-status_line_top_row="$(($lines - $status_line_height))"
+status_line_top_row="$(($lines - $status_msg_line_height))"
 body_bottom_row=$((${status_line_top_row} - 1))
 
-status_line ">"
+# display menu until break is encountered
+while true; do
 
-# Display menu until selected_option == 0
-while [[ selected_option != 0 ]]; do
-
+  # reset ui
+  clear_header
   clear_body
+  status_msg "${last_status_line1_message}" "${last_status_line2_message}"
   
-  # position and print menu separator then reset cursor to top 
-  tput cup $menu_bottom_row 0
-  printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-  echo "   Existing passwords found in the current folder"
-  echo "   ----------------------------------------------"
-  for i in "${secrets[@]}"; do
-    echo "   $i"
-  done  
-
+  # print default body and home the cursor
+  print_default_body
   tput cup 0 0
   
   # print main menu
   echo "   Please Select:"
-  echo 
+  echo "   (provider=$provider)   "
   select_option "${menu_items[@]}"
   selected_option=$?
-  status_line "> ${menu_items[$selected_option]}"
+  status_msg "${menu_items[$selected_option]}"
  
-  # Act on selection
+  # act on main menu selection
   case $selected_option in
     0)  tput cup $body_top_row 0
         clear_body
         echo ""
         read -p "Enter the name of the new password: " 
         pass_name=${REPLY}
-        status_line "> Creating password: $pass_name"
+        status_msg "Creating password: $pass_name"
         echo ""
         select_option  "${pass_gen_menu_items[@]}"
         choice=$?
@@ -68,7 +59,7 @@ while [[ selected_option != 0 ]]; do
           read -p "Enter the password or key value: " 
           pass=${REPLY}
         fi
-        status_line "> Your password: ${pass}"
+        status_msg "Your password: ${pass}"
         # add item to db
         add "${pass_name}" "${pass}"
         # append to file
@@ -91,7 +82,7 @@ while [[ selected_option != 0 ]]; do
           read -p "Enter the password or key value: " 
           pass=${REPLY}
         fi
-        status_line "> You change password ${pass}"
+        status_msg "You change password ${pass}"
         change "${key_names[$choice]}" "$pass"
         ;;
     2)  tput cup $body_top_row 0
@@ -101,7 +92,7 @@ while [[ selected_option != 0 ]]; do
         select_option "${key_names[@]}"
         choice=$?
         get "${key_names[$choice]}"
-        status_line "> show password ${key_names[$choice]}"
+        status_msg "Show password ${key_names[$choice]}"
         ;;
     3)  tput cup $body_top_row 0
         clear_body
@@ -110,7 +101,7 @@ while [[ selected_option != 0 ]]; do
         select_option "${key_names[@]}"
         choice=$?
         delete "${key_names[$choice]}"
-        status_line "> deleted password ${key_names[$choice]}"
+        status_msg "Deleted password ${key_names[$choice]}"
         unset 'key_names[$choice]'
         save_keys_to_file
         load_from_file
@@ -124,5 +115,6 @@ while [[ selected_option != 0 ]]; do
 
   read -n 1
 done
+clear
 
 exit 0

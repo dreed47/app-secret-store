@@ -2,7 +2,7 @@
 # 
 # MacOS KeyChain plugin
 
-readonly password_type="custom app secrets"
+password_type="custom app secrets"
 
 add() {
   echo ""
