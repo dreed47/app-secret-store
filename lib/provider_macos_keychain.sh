@@ -4,6 +4,12 @@
 
 if [ -z ${macos_keychain_password_type+x} ]; then macos_keychain_password_type="custom app secrets"; fi
 
+provider_config() {
+    echo "# If you're using MacOS Keychain you can override the password type (kind) or let it default." >> $1
+    echo "# macos_keychain_password_type=\"custom app secrets\"" >> $1
+}
+
+
 add() {
   echo ""
   if [ -z "$1" ] || [ -z "$2" ]; then
@@ -14,7 +20,7 @@ add() {
     security add-generic-password -a ${USER} -s $1 -w $pass -U -D "$macos_keychain_password_type"  
   else
     echo "security add-generic-password -a ${USER} -s $1 -w $2 -U -D $macos_keychain_password_type"
-    security add-generic-password -a ${USER} -s $1 -w $2 -U -D "$macos_keychain_password_type"
+    security add-generic-password -a ${USER} -s $1 -w "$2" -U -D "$macos_keychain_password_type"
     echo $result
   fi
   echo ""
@@ -30,7 +36,7 @@ change() {
     security add-generic-password -a ${USER} -s $1 -w $pass -U -D "$macos_keychain_password_type"  
   else
     echo "security add-generic-password -a ${USER} -s $1 -w $2 -U -D $macos_keychain_password_type"
-    security add-generic-password -a ${USER} -s $1 -w $2 -U -D "$macos_keychain_password_type"
+    security add-generic-password -a ${USER} -s $1 -w "$2" -U -D "$macos_keychain_password_type"
     echo $result
   fi
   echo ""

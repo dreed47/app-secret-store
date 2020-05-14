@@ -85,7 +85,7 @@ while true; do
           read -p "Enter the secret/password or key value: " 
           pass=${REPLY}
         fi
-        status_msg "You change secret item: ${pass}"
+        status_msg "You changed secret item: ${pass}"
         change "${namespace}${key_names[$choice]}" "$pass"
         ;;
     2)  tput cup $body_top_row 0

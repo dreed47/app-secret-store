@@ -6,6 +6,13 @@
 # provider="azure_keyvault"
 # azure_vault_name="MY-VAULT-NAME-HERE"
 
+if [ -z ${azure_vault_name+x} ]; then azure_vault_name="MY-VAULT-NAME-HERE"; fi
+
+provider_config() {
+    echo "# If you're using Azure Key Vault enter your vault name below." >> $1
+    echo "# azure_vault_name=\"MY-VAULT-NAME-HERE\"" >> $1
+}
+
 add() {
   echo ""
   if [ -z "$1" ] || [ -z "$2" ]; then

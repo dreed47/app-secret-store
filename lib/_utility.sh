@@ -21,8 +21,7 @@ create_default_config() {
     
     echo "# Enable/disable desired key store provider and associated variables." >> $1
     echo >> $1
-    for i in "${provider_list[@]}"
-    do
+    for i in "${provider_list[@]}"; do
         if [ $i ==  ${provider_list[$selected_option]} ]; then
             echo "provider=\"$i\"" >> $1
         else
@@ -39,14 +38,15 @@ create_default_config() {
     namespace="${input:-$namespace}"
     echo >> $1
     echo "namespace=\"$namespace\"" >> $1
-    echo >> $1
-    echo "# If you're using MacOS Keychain you can override the password type or let it default." >> $1
-    echo "# macos_keychain_password_type=\"custom app secrets\"" >> $1
-    echo >> $1
-    echo "# If you're using Azure Key Vault enter your vault name below." >> $1
-    echo "# azure_vault_name=\"MY-VAULT-NAME-HERE\"" >> $1
 
-
+    #  hook to allow provider files to add to the global config file
+    for i in "${provider_list[@]}"; do
+        provider_file="${script_path}/lib/provider_${i}.sh"
+        echo >> $1
+        source "$provider_file"
+        provider_config $1 
+    done
+    
 }
 
 gen_password() {
