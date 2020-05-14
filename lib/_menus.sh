@@ -35,7 +35,7 @@ while true; do
   
   # print main menu
   echo "   Please Select:"
-  echo "   (provider=$provider)   "
+  echo "   (provider:$provider) (namespace:\"$namespace\")   "
   select_option "${menu_items[@]}"
   selected_option=$?
   status_msg "${menu_items[$selected_option]}"
@@ -45,8 +45,8 @@ while true; do
     0)  tput cup $body_top_row 0
         clear_body
         echo ""
-        echo "Secret item names are not namespaced to this project in the key store so either use  "
-        echo "unique names for this project or ensure you dont accidentally change an existing item)): "
+        echo "Secret item names are namespaced to this project directory.  The namespace is prefixed "
+        echo "to the front of secret item names.  This full namespaced nane appears ONLY in the key store."
         echo
         read -p "Enter the name of the new secret item: " 
         pass_name=${REPLY}
@@ -64,7 +64,7 @@ while true; do
         fi
         status_msg "Entered secret value: ${pass}"
         # add item to db
-        add "${pass_name}" "${pass}"
+        add "${namespace}${pass_name}" "${pass}"
         # append to file
         echo $pass_name >> $KEYSTORE_FILE
         load_from_file
@@ -86,7 +86,7 @@ while true; do
           pass=${REPLY}
         fi
         status_msg "You change secret item: ${pass}"
-        change "${key_names[$choice]}" "$pass"
+        change "${namespace}${key_names[$choice]}" "$pass"
         ;;
     2)  tput cup $body_top_row 0
         clear_body
@@ -94,7 +94,7 @@ while true; do
         echo  
         select_option "${key_names[@]}"
         choice=$?
-        get "${key_names[$choice]}"
+        get "${namespace}${key_names[$choice]}"
         status_msg "Show secret: ${key_names[$choice]}"
         ;;
     3)  tput cup $body_top_row 0
@@ -103,7 +103,7 @@ while true; do
         echo  
         select_option "${key_names[@]}"
         choice=$?
-        delete "${key_names[$choice]}"
+        delete "${namespace}${key_names[$choice]}"
         status_msg "Deleted secret item: ${key_names[$choice]}"
         unset 'key_names[$choice]'
         save_keys_to_file
