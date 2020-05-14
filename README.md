@@ -6,8 +6,7 @@ plugin is enabled by default but other provider plugins can be added (e.g. [Azur
 * Make sure the keystore file is your PATH or symlink it to a file in your PATH. Also make sure 
 to copy the lib sub-folder as well.  
 
-* Can be run from the command line e.g. ```keystore add MYKEYNAME MYPASSWORD``` or run from the menu system. (warning, cli does not namespace secret item names in your key store)
-by running just ```keystore``` with no parameters.
+* Can be run from the command line e.g. ```keystore add MYKEYNAME MYPASSWORD``` or run from the menu system by running just ```keystore``` with no parameters. (warning, cli does not namespace secret item names in your key store)
 
 * Running the keystore menu system will look for a .keystore.keys file in the folder its run from.  If it's not there it will create an empty one.  This file contains the password variable names you want to manage for the project located in this folder.
 
