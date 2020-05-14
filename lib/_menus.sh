@@ -46,7 +46,7 @@ while true; do
         clear_body
         echo ""
         echo "Secret item names are namespaced to this project directory.  The namespace is prefixed "
-        echo "to the front of secret item names.  This full namespaced nane appears ONLY in the key store."
+        echo "to the front of secret item names.  This full namespaced name appears ONLY in the key store."
         echo
         read -p "Enter the name of the new secret item: " 
         pass_name=${REPLY}
