@@ -40,8 +40,10 @@ create_default_config() {
     echo >> $1
     echo "namespace=\"$namespace\"" >> $1
     echo >> $1
-    echo "#azure_vault_name=\"MY-VAULT-NAME-HERE\"" >> $1
+    echo "# If your using MacOS Keychain you can override the password type or let it default." >> $1
+    echo "# macos_keychain_password_type=\"custom app secrets\"" >> $1
     echo >> $1
+    echo "#3azure_vault_name=\"MY-VAULT-NAME-HERE\"" >> $1
 
 
 }

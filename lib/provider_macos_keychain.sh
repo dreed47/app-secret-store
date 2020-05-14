@@ -2,7 +2,7 @@
 # 
 # MacOS KeyChain plugin
 
-password_type="custom app secrets"
+if [ -z ${macos_keychain_password_type+x} ]; then macos_keychain_password_type="custom app secrets"; fi
 
 add() {
   echo ""
@@ -10,11 +10,11 @@ add() {
     echo "...command requires 2 parameters, the password name and the actual password (or GEN to generate one) "
   elif [ $2 = "GEN" ]; then
     pass=$(pwgen)
-    echo "security add-generic-password -a ${USER} -s $1 -w $pass -U -D $password_type"
-    security add-generic-password -a ${USER} -s $1 -w $pass -U -D "$password_type"  
+    echo "security add-generic-password -a ${USER} -s $1 -w $pass -U -D $macos_keychain_password_type"
+    security add-generic-password -a ${USER} -s $1 -w $pass -U -D "$macos_keychain_password_type"  
   else
-    echo "security add-generic-password -a ${USER} -s $1 -w $2 -U -D $password_type"
-    security add-generic-password -a ${USER} -s $1 -w $2 -U -D "$password_type"
+    echo "security add-generic-password -a ${USER} -s $1 -w $2 -U -D $macos_keychain_password_type"
+    security add-generic-password -a ${USER} -s $1 -w $2 -U -D "$macos_keychain_password_type"
     echo $result
   fi
   echo ""
@@ -26,11 +26,11 @@ change() {
     echo "...command requires 2 parameters, the password name and the actual password (or GEN to generate one) "
   elif [ $2 = "GEN" ]; then
     pass=$(pwgen)
-    echo "security add-generic-password -a ${USER} -s $1 -w $pass -U -D $password_type"
-    security add-generic-password -a ${USER} -s $1 -w $pass -U -D "$password_type"  
+    echo "security add-generic-password -a ${USER} -s $1 -w $pass -U -D $macos_keychain_password_type"
+    security add-generic-password -a ${USER} -s $1 -w $pass -U -D "$macos_keychain_password_type"  
   else
-    echo "security add-generic-password -a ${USER} -s $1 -w $2 -U -D $password_type"
-    security add-generic-password -a ${USER} -s $1 -w $2 -U -D "$password_type"
+    echo "security add-generic-password -a ${USER} -s $1 -w $2 -U -D $macos_keychain_password_type"
+    security add-generic-password -a ${USER} -s $1 -w $2 -U -D "$macos_keychain_password_type"
     echo $result
   fi
   echo ""
